@@ -1,8 +1,0 @@
-# CaptainHook 5.10.0
-
-INTERACTIVE="--no-interaction"
-
-vendor/bin/captainhook $INTERACTIVE --configuration=captainhook.json --bootstrap=vendor/autoload.php hook:pre-commit "$@" <&0
-
-pnpm run typecheck
-pnpm exec lint-staged

@@ -1,5 +1,0 @@
-# CaptainHook 5.10.0
-
-INTERACTIVE="--no-interaction"
-
-vendor/bin/captainhook $INTERACTIVE --configuration=captainhook.json --bootstrap=vendor/autoload.php hook:pre-push "$@" <&0
