@@ -37,3 +37,10 @@ $routes->group(
         $routes->get('(:any)', 'ExceptionController::notFound');
     }
 );
+
+// Route DELETE définie séparément sans csrf
+$routes->delete(
+    config('RestApi')->gateway . 'episodes/(:num)', 
+    '\Modules\Api\Rest\V1\Controllers\EpisodeController::attemptDeleteEpisode/$1',
+    ['filter' => 'rest-api']
+);

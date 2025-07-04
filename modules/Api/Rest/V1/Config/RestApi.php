@@ -13,13 +13,21 @@ class RestApi extends BaseConfig
      *
      * Disabled by default.
      */
-    public bool $enabled = false;
+    // public bool $enabled = false;
 
-    public bool $basicAuth = false;
+    // public bool $basicAuth = false;
 
-    public ?string $basicAuthUsername = null;
+    // public ?string $basicAuthUsername = null;
 
-    public ?string $basicAuthPassword = null;
+    // public ?string $basicAuthPassword = null;
+
+    public bool $enabled = true;
+
+    public bool $basicAuth = true;
+
+    public ?string $basicAuthUsername = "xav";
+
+    public ?string $basicAuthPassword = "xav";
 
     /**
      * Default results limit.

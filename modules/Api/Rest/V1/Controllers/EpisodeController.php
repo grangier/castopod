@@ -292,6 +292,64 @@ class EpisodeController extends Controller
         return $this->respond(self::mapEpisode($episode));
     }
 
+    /**
+     * Supprime un épisode
+     */
+    public function attemptDeleteEpisode(int $id): ResponseInterface
+    {
+        error_log("attemptDeleteEpisode called with ID: " . $id);
+        $episodeModel = new EpisodeModel();
+        $episode = $episodeModel->getEpisodeById($id);
+
+        if (! $episode instanceof Episode) {
+            return $this->failNotFound('Episode not found');
+        }
+
+        // Validation optionnelle : vérifier si l'utilisateur a le droit de supprimer
+        // Vous pouvez ajouter des règles de validation si nécessaire
+        $rules = [
+            'deleted_by' => 'required|is_natural_no_zero', // Si vous voulez tracer qui supprime
+        ];
+
+        if (! $this->validate($rules)) {
+            return $this->failValidationErrors(array_values($this->validator->getErrors()));
+        }
+
+        // $deletedByUserId = (int) $this->request->getPost('deleted_by');
+
+        // $userModel = new UserModel();
+        // $deletedByUser = $userModel->find($deletedByUserId);
+
+        // if (! $deletedByUser) {
+        //     return $this->failNotFound('User not found');
+        // }
+
+        // // Vérification si l'épisode est publié - vous pourriez vouloir empêcher la suppression
+        // if ($episode->publication_status === 'published') {
+        //     return $this->fail('Cannot delete a published episode', 409);
+        // }
+
+        $db = db_connect();
+        $db->transStart();
+
+        // Supprimer les posts associés si ils existent
+        $postModel = new PostModel();
+        $postModel->where('episode_id', $episode->id)->delete();
+
+        // Supprimer l'épisode
+        if (! $episodeModel->delete($episode->id)) {
+            $db->transRollback();
+            return $this->fail($episodeModel->errors(), 400);
+        }
+
+        $db->transComplete();
+
+        return $this->respond([
+            'message' => 'Episode deleted successfully',
+            'deleted_episode_id' => $id
+        ]);
+    }
+
     protected static function mapEpisode(Episode $episode): Episode
     {
         $episode->cover_url = $episode->getCover()
