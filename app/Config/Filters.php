@@ -77,6 +77,7 @@ class Filters extends BaseConfig
                     '@[a-zA-Z0-9\_]{1,32}/inbox',
                     'api/rest/v1/episodes',
                     'api/rest/v1/episodes/[0-9]+/publish',
+                    'api/rest/v1/episodes/[0-9]+',  // ← Ajoutez cette ligne pour DELETE
                 ],
             ],
             // 'invalidchars',
