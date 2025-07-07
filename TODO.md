@@ -3,7 +3,7 @@
 ## Vue d'ensemble des objectifs
 
 ### 🎯 Objectifs principaux
-1. **Redirection automatique** : `/@handle/` → `/@handle/episodes`
+1. ✅ **Redirection automatique** : `/@handle/` → `/@handle/episodes` **TERMINÉ**
 2. **Gestion des dates de publication** dans l'API REST
 3. **Méthode PATCH** pour mise à jour épisodes
 4. **Pagination standardisée** pour listes d'épisodes
@@ -11,69 +11,79 @@
 
 ---
 
-## 1. 🔄 Redirection automatique vers /episodes
+## 1. ✅ Redirection automatique vers /episodes - TERMINÉ
 
-### 📍 Localisation du code
-- **Contrôleur** : `/app/Controllers/PodcastController.php`
-- **Routes** : `/app/Config/Routes.php` (lignes 55-190)
-- **Thème** : `/themes/cp_app/podcast/_layout.php`
-- **Navigation** : `/themes/cp_app/podcast/_partials/navigation.php`
+### 📍 Localisation du code modifié
+- **Contrôleur** : `/app/Controllers/PodcastController.php` ✅
+- **Routes** : `/app/Config/Routes.php` ✅
+- **Navigation** : `/themes/cp_app/podcast/_partials/navigation.php` ✅
+- **Entités/Helpers** : `/app/Entities/Podcast.php`, `/app/Helpers/seo_helper.php`, `/app/Models/PodcastModel.php` ✅
 
-### 🔍 Analyse actuelle
+### 🎯 Solution implémentée
+
+#### ✅ 1.1 Route principale modifiée
 ```php
-// Dans Routes.php ligne 58
-$routes->get('/', 'PodcastController::activity/$1', [
-    'as' => 'podcast-activity',
-    // ... alternate-content pour ActivityPub
-]);
-```
-
-**Problème** : La route par défaut pointe vers `activity/$1` au lieu de `episodes/$1`
-
-### ✅ Actions requises
-
-#### 1.1 Modifier la route principale
-```php
-// Fichier: /app/Config/Routes.php
-// Ligne 58 : Changer 'PodcastController::activity/$1' vers 'PodcastController::episodes/$1'
+// Fichier: /app/Config/Routes.php ligne 58
 $routes->get('/', 'PodcastController::episodes/$1', [
-    'as' => 'podcast-episodes', // Changer aussi l'alias
+    'as' => 'podcast-episodes',
     'alternate-content' => [
-        // Garder le support ActivityPub intact
+        // Support ActivityPub préservé intégralement
     ]
 ]);
 ```
 
-#### 1.2 Supprimer/commenter la vue activité
+#### ✅ 1.2 Méthode activity() transformée en redirection
 ```php
 // Dans /app/Controllers/PodcastController.php
-// Commenter ou supprimer la méthode activity()
-// public function activity(): string
-
-// OU rediriger vers episodes
-public function activity(): RedirectResponse
+public function activity()
 {
+    // Redirect to episodes page - activity is now deprecated
     return redirect()->to(route_to('podcast-episodes', $this->podcast->handle));
 }
 ```
 
-#### 1.3 Mettre à jour la navigation
+#### ✅ 1.3 Navigation simplifiée
 ```php
 // Fichier: /themes/cp_app/podcast/_partials/navigation.php
-// Supprimer l'onglet "Activité" ou le masquer
-// Marquer "Épisodes" comme actif par défaut
+$navigationItems = [
+    [
+        'uri'   => route_to('podcast-episodes-explicit', esc($podcast->handle)),
+        'label' => lang('Podcast.episodes'),
+    ],
+    [
+        'uri'   => route_to('podcast-about', esc($podcast->handle)),
+        'label' => lang('Podcast.about'),
+    ],
+]
 ```
 
-#### 1.4 Vérifier les liens internes
-- Rechercher tous les `route_to('podcast-activity')` et les remplacer
-- Vérifier les redirections dans les contrôleurs admin
-- Tester les liens de navigation dans l'interface
+#### ✅ 1.4 Liens internes mis à jour
+- `app/Entities/Podcast.php` : `getLink()` utilise `podcast-episodes` ✅
+- `app/Controllers/HomeController.php` : redirection vers `podcast-episodes` ✅
+- `app/Helpers/seo_helper.php` : liens ActivityPub mis à jour ✅
+- `app/Models/PodcastModel.php` : URI des acteurs mis à jour ✅
 
-### 🔧 Fichiers à modifier
-1. `/app/Config/Routes.php` - Route principale
-2. `/app/Controllers/PodcastController.php` - Méthodes contrôleur
-3. `/themes/cp_app/podcast/_partials/navigation.php` - Navigation
-4. Recherche globale pour `podcast-activity` → `podcast-episodes`
+### 🔧 Fichiers modifiés
+1. ✅ `/app/Config/Routes.php` - Route principale + résolution conflit d'alias
+2. ✅ `/app/Controllers/PodcastController.php` - Redirection activity → episodes
+3. ✅ `/themes/cp_app/podcast/_partials/navigation.php` - Navigation simplifiée
+4. ✅ `/app/Entities/Podcast.php` - Lien principal du podcast
+5. ✅ `/app/Controllers/HomeController.php` - Redirection instance unique
+6. ✅ `/app/Helpers/seo_helper.php` - Métadonnées ActivityPub
+7. ✅ `/app/Models/PodcastModel.php` - URI acteurs ActivityPub
+
+### 🐛 Problèmes résolus
+- **Conflit d'alias de routes** : Route `/episodes` renommée `podcast-episodes-explicit`
+- **Erreur TypeError** : `url_is()` recevait `false` au lieu d'une string
+- **Volume Docker** : Suppression conflit `./app/Config/Filters.php`
+- **Support ActivityPub** : Préservé intégralement avec alternate-content
+
+### 🎉 Résultat final
+- ✅ `/@handle/` redirige automatiquement vers la page des épisodes
+- ✅ Navigation simplifiée (Episodes + About seulement)  
+- ✅ Ancien lien `/@handle/activity` redirige vers episodes
+- ✅ Support ActivityPub fonctionnel
+- ✅ Aucune régression sur fonctionnalités existantes
 
 ---
 
@@ -577,11 +587,11 @@ public function show(int $id): ResponseInterface
 
 ## 🔧 Plan d'implémentation suggéré
 
-### Phase 1 : Frontend (Redirection)
-1. Modifier route principale dans `Routes.php`
-2. Adapter contrôleur `PodcastController`
-3. Mettre à jour navigation et liens
-4. Tester toutes les URLs
+### ✅ Phase 1 : Frontend (Redirection) - TERMINÉ
+1. ✅ Modifier route principale dans `Routes.php`
+2. ✅ Adapter contrôleur `PodcastController`
+3. ✅ Mettre à jour navigation et liens
+4. ✅ Tester toutes les URLs et corriger bugs
 
 ### Phase 2 : API - Dates et PATCH
 1. Étudier code import RSS pour dates
