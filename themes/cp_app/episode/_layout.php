@@ -138,18 +138,18 @@
             </div>
         </div>
     </header>
-    <div class="col-start-2 px-8 py-4 text-white bg-header">
-        <h2 class="text-xs font-bold tracking-wider uppercase whitespace-pre-line font-display"><?= lang('Episode.description') ?></h2>
-        <?php if (substr_count($episode->description_markdown, "\n") > 6 || strlen($episode->description) > 500): ?>
-            <SeeMore class="max-w-xl prose-sm text-white"><?= $episode->getDescriptionHtml('-+Website+-') ?></SeeMore>
-        <?php else: ?>
-            <div class="max-w-xl prose-sm text-white"><?= $episode->getDescriptionHtml('-+Website+-') ?></div>
-        <?php endif; ?>
-    </div>
     <?= $this->include('episode/_partials/navigation') ?>
     <?= $this->include('podcast/_partials/premium_banner') ?>
     <div class="relative grid items-start flex-1 col-start-2 grid-cols-podcastMain gap-x-6">
         <main class="w-full col-start-1 row-start-1 py-6 col-span-full md:col-span-1">
+            <div class="px-8 py-4 mb-6 text-black bg-white rounded-lg">
+                <h2 class="text-xs font-bold tracking-wider uppercase whitespace-pre-line font-display text-black"><?= lang('Episode.description') ?></h2>
+                <?php if (substr_count($episode->description_markdown, "\n") > 6 || strlen($episode->description) > 500): ?>
+                    <SeeMore class="max-w-xl prose-sm text-black"><?= $episode->getDescriptionHtml('-+Website+-') ?></SeeMore>
+                <?php else: ?>
+                    <div class="max-w-xl prose-sm text-black"><?= $episode->getDescriptionHtml('-+Website+-') ?></div>
+                <?php endif; ?>
+            </div>
             <?= $this->renderSection('content') ?>
         </main>
         <div data-sidebar-toggler="backdrop" class="absolute top-0 left-0 z-10 hidden w-full h-full bg-backdrop/75 md:hidden" role="button" tabIndex="0" aria-label="<?= lang('Common.close') ?>"></div>

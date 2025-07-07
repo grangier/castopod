@@ -47,7 +47,7 @@
             <a href="<?= $podcast->link ?>">
                 <h1 class="flex flex-col items-center mt-2 text-2xl font-bold leading-none line-clamp-2 md:leading-none font-display"><?= esc($podcast->title) ?><span class="ml-1 font-sans text-base font-normal">@<?= esc($podcast->handle) ?></span></h1>
             </a>
-            <div class="z-10 flex flex-wrap items-center justify-center gap-2 p-2 mt-6 shadow-xl rounded-conditional-full bg-accent-base shadow-accent/20">
+            <!-- <div class="z-10 flex flex-wrap items-center justify-center gap-2 p-2 mt-6 shadow-xl rounded-conditional-full bg-accent-base shadow-accent/20">
                 <?php if (in_array(true, array_column($podcast->fundingPlatforms, 'is_visible'), true)): ?>
                     <button class="inline-flex items-center px-4 text-xs font-semibold leading-8 tracking-wider text-red-600 uppercase bg-white rounded-full shadow hover:text-red-500 focus:ring-accent" data-toggle="funding-links" data-toggle-class="hidden"><?= icon('heart-fill', [
                         'class' => 'mr-2 text-sm',
@@ -65,7 +65,7 @@
                     ],
                 ) ?>
                 <a href="<?= $podcast->feed_url ?>" title="<?= lang('Podcast.feed') ?>" data-tooltip="bottom" class="flex items-center justify-center w-8 h-8 p-1 text-xl text-orange-500 rounded-full shadow bg-elevated focus:ring-accent" target="_blank" rel="noopener noreferrer"><?= icon('rss-fill') ?></a>
-            </div>
+            </div> -->
         </div>
     </header>
     <main class="grid w-full max-w-2xl gap-4 px-4 py-6 mx-auto sm:grid-cols-2">
