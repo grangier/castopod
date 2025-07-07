@@ -397,6 +397,11 @@ class PodcastImport extends BaseCommand
             foreach ($platformType['elements'] as $platform) {
                 CLI::showProgress($currPlatformStep++, $platformType['count']);
                 $platformSlug = $platform->getAttribute('platform');
+                
+                if ($platformSlug === null) {
+                    continue;
+                }
+                
                 $platformData = $platforms->findPlatformBySlug($platformType['name'], $platformSlug);
 
                 if ($platformData === null) {
