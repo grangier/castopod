@@ -401,7 +401,7 @@ class PodcastModel extends Model
 
         $actorId = (new ActorModel())->insert(
             [
-                'uri'           => url_to('podcast-activity', $username),
+                'uri'           => url_to('podcast-episodes', $username),
                 'username'      => $username,
                 'domain'        => $domain,
                 'private_key'   => $privatekey,

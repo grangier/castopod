@@ -56,52 +56,10 @@ class PodcastController extends BaseController
             ->setBody($podcastActor->toJSON());
     }
 
-    public function activity(): string
+    public function activity()
     {
-        // Prevent analytics hit when authenticated
-        if (! auth()->loggedIn()) {
-            $this->registerPodcastWebpageHit($this->podcast->id);
-        }
-
-        $cacheName = implode(
-            '_',
-            array_filter([
-                'page',
-                "podcast#{$this->podcast->id}",
-                'activity',
-                service('request')
-                    ->getLocale(),
-                is_unlocked($this->podcast->handle) ? 'unlocked' : null,
-                auth()
-                    ->loggedIn() ? 'authenticated' : null,
-            ]),
-        );
-
-        if (! ($cachedView = cache($cacheName))) {
-            $data = [
-                'metatags' => get_podcast_metatags($this->podcast, 'activity'),
-                'podcast'  => $this->podcast,
-                'posts'    => (new PostModel())->getActorPublishedPosts($this->podcast->actor_id),
-            ];
-
-            // if user is logged in then send to the authenticated activity view
-            if (auth()->loggedIn()) {
-                helper('form');
-
-                return view('podcast/activity', $data);
-            }
-
-            $secondsToNextUnpublishedEpisode = (new EpisodeModel())->getSecondsToNextUnpublishedEpisode(
-                $this->podcast->id,
-            );
-
-            return view('podcast/activity', $data, [
-                'cache'      => $secondsToNextUnpublishedEpisode ?: DECADE,
-                'cache_name' => $cacheName,
-            ]);
-        }
-
-        return $cachedView;
+        // Redirect to episodes page - activity is now deprecated in favor of episodes as main page
+        return redirect()->to(route_to('podcast-episodes', $this->podcast->handle));
     }
 
     public function about(): string

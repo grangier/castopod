@@ -62,7 +62,7 @@ if (! function_exists('get_podcast_metatags')) {
             ->push('link', [
                 'rel'  => 'alternate',
                 'type' => 'application/activity+json',
-                'href' => url_to('podcast-activity', esc($podcast->handle)),
+                'href' => url_to('podcast-episodes', esc($podcast->handle)),
             ]);
 
         if ($podcast->payment_pointer) {

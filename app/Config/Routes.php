@@ -55,8 +55,8 @@ service('auth')
 $routes->group('@(:podcastHandle)', static function ($routes): void {
     // override default Fediverse Library's actor route
     $routes->options('/', 'ActivityPubController::preflight');
-    $routes->get('/', 'PodcastController::activity/$1', [
-        'as'                => 'podcast-activity',
+    $routes->get('/', 'PodcastController::episodes/$1', [
+        'as'                => 'podcast-episodes',
         'alternate-content' => [
             'application/activity+json' => [
                 'namespace'         => 'Modules\Fediverse\Controllers',
@@ -84,7 +84,7 @@ $routes->group('@(:podcastHandle)', static function ($routes): void {
     ]);
     $routes->options('episodes', 'ActivityPubController::preflight');
     $routes->get('episodes', 'PodcastController::episodes/$1', [
-        'as'                => 'podcast-episodes',
+        'as'                => 'podcast-episodes-explicit',
         'alternate-content' => [
             'application/activity+json' => [
                 'namespace'         => 'App\Controllers',
