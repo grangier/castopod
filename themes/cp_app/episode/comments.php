@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<?php if (can_user_interact()): ?>
+<?php if (false && can_user_interact()): ?>
     <?= view('_message_block') ?>
     <form action="<?= route_to('comment-attempt-create', $podcast->id, $episode->id)  ?>" method="POST" class="flex p-4 gap-x-2">
         <?= csrf_field() ?>
